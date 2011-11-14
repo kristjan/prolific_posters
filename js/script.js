@@ -27,8 +27,9 @@ Prolific = (function() {
     }
 
     var offset = (page - 1) * PAGE_SIZE;
+
     $.getJSON(baseUrl + '/Me/links/',
-      {'limit' : PAGE_SIZE, 'offset' : offset, 'full' : true},
+      {'fields' : '{"from":1,"title":1,"link":1}', 'limit' : PAGE_SIZE, 'offset' : offset, 'full' : true},
       function(data) {
         buildLinks(data);
         if (data.length < PAGE_SIZE) { loading = false; }
