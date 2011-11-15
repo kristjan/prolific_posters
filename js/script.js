@@ -5,38 +5,34 @@ $(document).ready(function() {
 });
 
 Prolific = (function() {
-  var container;
-  var PAGE_SIZE = 100;
+  var PAGE_SIZE = 500;
+
   var loading = true;
+  var everyone = $("<div>");
 
   function init() {
-    container = $('#prolific');
     $('.header .stop').click(stopLoading);
     loadLinks(1);
   }
 
-  var loadTimeout;
   function loadLinks(page) {
     if (!loading) {
-      $('.header .stop').replaceWith(
-        $('<span>', { 'class' : 'stop' }).
-          css({ 'display' : 'none' }).
-          text('Finished.').fadeIn()
-      );
+      finish();
       return;
     }
 
     var offset = (page - 1) * PAGE_SIZE;
 
-    $.getJSON(baseUrl + '/Me/links/',
-      {'fields' : '{"from":1,"title":1,"link":1}', 'limit' : PAGE_SIZE, 'offset' : offset, 'full' : true},
-      function(data) {
-        buildLinks(data);
+    $.getJSON(baseUrl + '/Me/links/', {
+        'fields' : '{"from":1,"title":1,"link":1}',
+        'limit' : PAGE_SIZE,
+        'offset' : offset,
+        'full' : true
+      }, function(data) {
         if (data.length < PAGE_SIZE) { loading = false; }
-        loadTimeout = setTimeout(function() {
-          clearTimeout(loadTimeout);
-          loadLinks(page + 1);
-        }, 1000);
+        loadLinks(page + 1);
+        updateTotal(data.length);
+        buildLinks(data);
       }
     );
   }
@@ -48,6 +44,15 @@ Prolific = (function() {
     return false;
   }
 
+  function finish() {
+    $('.header .stop').replaceWith(
+      $('<span>', { 'class' : 'stop' }).
+        css({ 'display' : 'none' }).
+        text('Finished.').fadeIn()
+    );
+    sort();
+  }
+
   function buildLinks(data) {
     if(!data || data.length === 0) { return; }
     for(var i in data) {
@@ -55,8 +60,6 @@ Prolific = (function() {
       var people = findOrCreatePeople(datum);
       $.each(people, function(i, person) {addLink(person, datum)});
     }
-    updateTotal(data.length);
-    sort();
   }
 
   function updateTotal(count) {
@@ -84,11 +87,10 @@ Prolific = (function() {
 
   function findOrCreatePerson(encounter) {
     var slug = slugify(encounter.from);
-    var person = $('#' + slug);
+    var person = $('#' + slug, everyone);
     if (person.length === 0) {
       person = $('<div>', {
         'id' : slug,
-        'data-id' : slug,
         'class' : 'person clearfix',
         'data-count' : 0
       }).append(
@@ -102,7 +104,7 @@ Prolific = (function() {
         $('<ul>', { 'class' : 'links' }),
         $('<span>', { 'class' : 'scroll' }).html("Scroll &darr;")
       );
-      container.append(person);
+      everyone.append(person);
     }
     return person;
   }
@@ -112,12 +114,12 @@ Prolific = (function() {
   }
 
   function sort() {
-    var data = $('.person', container).clone();
+    var data = $('.person', everyone).clone();
     data.sort(function(a,b) {
       return parseInt($(b).attr('data-count'), 10) -
              parseInt($(a).attr('data-count'), 10);
     });
-    container.quicksand(data);
+    $('#prolific').hide().append(data).fadeIn();
   }
 
   return {
