@@ -24,7 +24,7 @@ Prolific = (function() {
     var offset = (page - 1) * PAGE_SIZE;
 
     $.getJSON(baseUrl + '/Me/links/', {
-        'fields' : '{"from":1,"title":1,"link":1}',
+        'fields' : '{"encounters.from":1,"title":1,"link":1}',
         'limit' : PAGE_SIZE,
         'offset' : offset,
         'full' : true
@@ -110,6 +110,10 @@ Prolific = (function() {
   }
 
   function slugify(name) {
+    if (name == null) {
+      return 'person-undefined';
+    }
+
     return 'person-' + name.toLowerCase().replace(/\W+/g, '_');
   }
 
