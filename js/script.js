@@ -30,9 +30,9 @@ Prolific = (function() {
         'full' : true
       }, function(data) {
         if (data.length < PAGE_SIZE) { loading = false; }
-        loadLinks(page + 1);
         updateTotal(data.length);
         buildLinks(data);
+        loadLinks(page + 1);
       }
     );
   }
@@ -58,13 +58,19 @@ Prolific = (function() {
     for(var i in data) {
       var datum = data[i];
       var people = findOrCreatePeople(datum);
-      $.each(people, function(i, person) {addLink(person, datum)});
+      addLinks(people, datum);
     }
   }
 
   function updateTotal(count) {
     var total = $('.header .total');
     total.text(parseInt(total.text(), 10) + count);
+  }
+
+  function addLinks(people, datum) {
+    $.each(people, function(i, person) {
+      addLink(person, datum);
+    });
   }
 
   function addLink(person, datum) {
@@ -110,7 +116,7 @@ Prolific = (function() {
   }
 
   function slugify(name) {
-    if (name == null) {
+    if (name === null) {
       return 'person-undefined';
     }
 
@@ -128,7 +134,7 @@ Prolific = (function() {
 
   return {
     init : init
-  }
+  };
 })();
 
 $(function() {
