@@ -10,7 +10,7 @@
   "repository":{
     "title":"Prolific Posters",
     "uses" : {
-      "type" : ["links"],
+      "types" : ["links"],
       "services": ["facebook", "twitter"]
     }
   }
