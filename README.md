@@ -1,1 +1,0 @@
-This is a minimal skeleton viewer that will run inside your locker and let you easily build your own experiences of your data.

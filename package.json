@@ -1,16 +1,17 @@
 {
   "name": "prolific-posters",
-    "version": "0.0.1",
-    "author": "Kristján Pétursson",
-    "licenses": [{
-      "type": "MIT",
-      "url": "http://creativecommons.org/licenses/MIT/"
-    }],
-    "repository":{
-      "viewer":"links",
-      "title":"Prolific Posters",
-      "type": "app",
-      "description": "Who crosses your streams?",
-      "static":"true"
+  "description": "Who crosses your streams?",
+  "author": "Kristján Pétursson <kristjan@gmail.com>",
+  "version": "0.0.1",
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://creativecommons.org/licenses/MIT/"
+  }],
+  "repository":{
+    "title":"Prolific Posters",
+    "uses" : {
+      "type" : ["links"],
+      "services": ["facebook", "twitter"]
     }
+  }
 }
